@@ -1,0 +1,7 @@
+<resources>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="app_name">Ваше текущее состояние</string>
+    <string name="input_state">Введите свое состояние</string>
+    <string name="title">Выберите своё состояние из существующих или введите его</string>
+    <string name="clearDB">Очистить базу данных</string>
+</resources>
