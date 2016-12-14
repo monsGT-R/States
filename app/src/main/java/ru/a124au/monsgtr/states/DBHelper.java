@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
 
     final String LOG_TAG = "myLogs";
 
@@ -40,6 +40,10 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table questions ("
                 + "id integer primary key autoincrement,"
                 + "name text);");
+        db.execSQL("INSERT INTO questions (id, name) VALUES (1, 'свою усталость');");
+        db.execSQL("INSERT INTO questions (id, name) VALUES (2, 'свое настроение');");
+        db.execSQL("INSERT INTO questions (id, name) VALUES (3, 'свой голод');");
+        db.execSQL("INSERT INTO questions (id, name) VALUES (4, 'свою cонливость');");
     }
 
     @Override
@@ -66,6 +70,27 @@ public class DBHelper extends SQLiteOpenHelper {
                 db.execSQL("create table questions ("
                         + "id integer primary key autoincrement,"
                         + "name text);");
+
+                db.execSQL("create table answers ("
+                        + "id integer primary key autoincrement,"
+                        + "question_id integer, answer integer);");
+
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        }
+        if (oldVersion < 3) {
+            db.beginTransaction();
+            try {
+
+                db.execSQL("create table answers ("
+                        + "id integer primary key autoincrement,"
+                        + "question_id integer, answer integer);");
+                db.execSQL("INSERT INTO questions (id, name) VALUES (1, 'свою усталость');");
+                db.execSQL("INSERT INTO questions (id, name) VALUES (2, 'свое настроение');");
+                db.execSQL("INSERT INTO questions (id, name) VALUES (3, 'свой голод');");
+                db.execSQL("INSERT INTO questions (id, name) VALUES (4, 'свою cонливость');");
 
                 db.setTransactionSuccessful();
             } finally {

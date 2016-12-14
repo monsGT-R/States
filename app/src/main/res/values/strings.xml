@@ -4,4 +4,5 @@
     <string name="input_state">Введите свое состояние</string>
     <string name="title">Выберите своё состояние из существующих или введите его</string>
     <string name="clearDB">Очистить базу данных</string>
+    <string name="insertDB">Заполнить базу данных на 10 дней</string>
 </resources>

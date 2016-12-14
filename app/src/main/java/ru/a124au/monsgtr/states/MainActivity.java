@@ -76,6 +76,11 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.insertDB) {
+            page1.InsertDB();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

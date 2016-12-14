@@ -54,7 +54,7 @@ public class Page1 extends Fragment {
         mylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                editState(null, id);
+                editState(null, id, null);
             }
         });
 
@@ -64,7 +64,7 @@ public class Page1 extends Fragment {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     String stateText = inputField.getText().toString();
                     if (stateText.length() > 0) {
-                        editState(stateText, -1);
+                        editState(stateText, -1, null);
                         v.setText("");
                         return true;
                     }
@@ -116,7 +116,7 @@ public class Page1 extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
-    void editState(String stateText, long id) {
+    void editState(String stateText, long id, String time) {
         String RowID;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         if (id != -1) {
@@ -136,11 +136,11 @@ public class Page1 extends Fragment {
         cv.clear();
         cv.put("state_id",RowID);
         db.update("current_state",cv,null,null);
-
-        Date time = Calendar.getInstance().getTime();
-
-        cv.put("date",String.valueOf(time));
-        db.insert("state_time", null, cv);
+        if (time == null) {
+            db.execSQL("INSERT INTO state_time(state_id, date) VALUES (?,datetime('now'))", new String[]{RowID});
+        } else {
+            db.execSQL("INSERT INTO state_time(state_id, date) VALUES (?,?)", new String[]{RowID,time});
+        }
     }
 
     public void ClearDB() {
@@ -155,6 +155,20 @@ public class Page1 extends Fragment {
         db.delete("state_time", null, null);
         // закрываем подключение к БД
         dbHelper.close();
+    }
+
+    public void InsertDB() {
+        for (int i = 0; i < 9; i++) {
+            editState("Проснулся", -1, "2016-12-0"+(i+1)+" 07:33:2"+i);
+            editState("Завтракаю", -1, "2016-12-0"+(i+1)+" 08:02:1"+i);
+            editState("Работаю", -1, "2016-12-0"+(i+1)+" 09:00:1"+i);
+            editState("Обедаю", -1, "2016-12-0"+(i+1)+" 13:30:1"+i);
+            editState("Продолжаю работать", -1, "2016-12-0"+(i+1)+" 14:20:1"+i);
+            editState("Возвращаюсь домой", -1, "2016-12-0"+(i+1)+" 18:10:1"+i);
+            editState("Ужинаю", -1, "2016-12-0"+(i+1)+" 18:40:1"+i);
+            editState("Гуляю", -1, "2016-12-0"+(i+1)+" 20:03:1"+i);
+            editState("Ложусь спать", -1, "2016-12-0"+(i+1)+" 23:00:1"+i);
+        }
     }
 
     // вывод в лог данных из курсора
