@@ -101,12 +101,12 @@ public class Page2 extends Fragment {
 
                 // создаем коллекцию элементов
                 childDataItem = new ArrayList<Map<String, String>>();
-                sqlQuery = "select s.name as name, strftime('%H:%m',st.date) as start_time, strftime('%H:%m',st.end_time) as end_time "
+                sqlQuery = "select s.name as name, strftime('%H:%M',st.date) as start_time, strftime('%H:%M',st.end_time) as end_time "
                         + "from state_time as st "
                         + "inner join states as s "
                         + "on st.state_id = s.id "
                         + "where strftime('%d-%m-%Y',st.date) = ? "
-                        + "GROUP BY date ORDER BY date DESC";
+                        + "GROUP BY st.date ORDER BY st.date DESC";
 
                 Cursor el = db.rawQuery(sqlQuery, new String[]{c.getString(date)});
                 if (el.moveToFirst()) {

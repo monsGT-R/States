@@ -12,27 +12,42 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.SimpleAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class Page3 extends Fragment {
 
     View rootView;
     ArrayList<String> listItems;
-    ArrayAdapter<String> adapter;
+    //ArrayAdapter<String> adapter;
+    SimpleAdapter adapter;
     ListView mylist;
     DBHelper dbHelper;
 
     Page4 page4;
 
+
+    final String ATTRIBUTE_NAME_TEXT = "text";
+    final String ATTRIBUTE_NAME_RB = "rb";
+
+    RadioGroup radioGroup;
+    RadioButton[] rb = new RadioButton[5];
+    ArrayList<Map<String, Object>> data;
+
     public Page3(Page4 page4) {
         this.page4 = page4;
     }
 
-    @Override
+    /*@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_page_3, container, false);
@@ -44,6 +59,34 @@ public class Page3 extends Fragment {
         mylist.setAdapter(adapter);
         LoadList();
         return rootView;
+    }*/
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_page_3, container, false);
+        dbHelper = new DBHelper(getActivity());
+
+        // упаковываем данные в понятную для адаптера структуру
+        data = new ArrayList<Map<String, Object>>();
+
+        // массив имен атрибутов, из которых будут читаться данные
+        String[] from = { ATTRIBUTE_NAME_TEXT, ATTRIBUTE_NAME_RB };
+        // массив ID View-компонентов, в которые будут вставлять данные
+        int[] to = { R.id.text_question, R.id.radioButtons };
+
+        // создаем адаптер
+        adapter = new SimpleAdapter(getContext(), data, R.layout.questions,
+                from, to);
+
+        // Указываем адаптеру свой биндер
+        adapter.setViewBinder(new MyViewBinder());
+
+        // определяем список и присваиваем ему адаптер
+        mylist=(ListView) rootView.findViewById(R.id.lv_page_3);
+        mylist.setAdapter(adapter);
+        LoadList();
+        return rootView;
     }
 
     void LoadList() {
@@ -51,11 +94,16 @@ public class Page3 extends Fragment {
         String sqlQuery = "select name "
                 + "from questions";
         Cursor c = db.rawQuery(sqlQuery, null);
-
+        Random rnd = new Random();
+        Map<String, Object> m;
         if (c.moveToFirst()) {
             int state_idColIndex = c.getColumnIndex("name");
             do {
-                listItems.add("Оцените "+c.getString(state_idColIndex));
+
+                m = new HashMap<String, Object>();
+                m.put(ATTRIBUTE_NAME_TEXT, "Оцените "+c.getString(state_idColIndex));
+                m.put(ATTRIBUTE_NAME_RB, rnd.nextInt(5));
+                data.add(m);
             } while (c.moveToNext());
         }
         adapter.notifyDataSetChanged();
@@ -120,6 +168,27 @@ public class Page3 extends Fragment {
             editState("", 3, "2017-06-0"+(i+1)+" 13:30:1"+i, rnd.nextInt(5)+1);
             editState("", 4, "2017-06-0"+(i+1)+" 14:20:1"+i, rnd.nextInt(5)+1);
             editState("", 5, "2017-06-0"+(i+1)+" 18:10:1"+i, rnd.nextInt(5)+1);
+        }
+    }
+    class MyViewBinder implements SimpleAdapter.ViewBinder {
+
+        @Override
+        public boolean setViewValue(View view, Object data,
+                                    String textRepresentation) {
+            int i = 0;
+            rb[0] = (RadioButton) view.findViewById(R.id.radioButton1);
+            rb[1] = (RadioButton) view.findViewById(R.id.radioButton2);
+            rb[2] = (RadioButton) view.findViewById(R.id.radioButton3);
+            rb[3] = (RadioButton) view.findViewById(R.id.radioButton4);
+            rb[4] = (RadioButton) view.findViewById(R.id.radioButton5);
+            switch (view.getId()) {
+                // LinearLayout
+                case R.id.radioButtons:
+                    i = ((Integer) data).intValue();
+                    rb[i].setChecked(true);
+                    return true;
+            }
+            return false;
         }
     }
 }

@@ -55,7 +55,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 2:
                 return "Анкетирование";
             case 3:
-                return "Журнал анкетирования";
+                return "Журнал анкет";
         }
         return null;
     }

@@ -154,6 +154,7 @@ public class Page1 extends Fragment {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date date = new Date();
             time = dateFormat.format(date);
+            Log.d(LOG_TAG, time);
         }
         cv.put("date", time);
         cv.put("state_id", RowID);
@@ -167,9 +168,7 @@ public class Page1 extends Fragment {
         cv.put("end_time", time);
         db.update("state_time",cv,"id = ?",new String[] { currId });
         cv.clear();
-        Log.d(LOG_TAG, currId);
         currId = RowID;
-        Log.d(LOG_TAG, currId);
 
         /**
          * Добавление current_state
