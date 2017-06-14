@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,6 +37,12 @@ public class Page1 extends Fragment {
     ArrayList<String> listItems;
     ArrayAdapter<String> adapter;
     ListView mylist;
+    String currId = "0";
+    Page2 page2;
+
+    public Page1(Page2 page2) {
+        this.page2 = page2;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,15 +86,19 @@ public class Page1 extends Fragment {
 
     void LoadLastState() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String sqlQuery = "select s.name as name "
+        String sqlQuery = "select s.name as name, st.id as id "
                 + "from current_state as cs "
+                + "inner join state_time as st "
+                + "on cs.state_id = st.id "
                 + "inner join states as s "
-                + "on cs.state_id = s.id ";
+                + "on st.state_id = s.id";
         Cursor c = db.rawQuery(sqlQuery, null);
         if (c.moveToFirst()) {
             int nameColIndex = c.getColumnIndex("name");
             titleText.setText("Ваш статус - "+c.getString(nameColIndex));
+            currId = c.getString(c.getColumnIndex("id"));
         }
+        Log.d(LOG_TAG, currId);
         c.close();
         // закрываем подключение к БД
         dbHelper.close();
@@ -134,13 +145,42 @@ public class Page1 extends Fragment {
             RowID = String.valueOf(id);
         }
         cv.clear();
+
+
+        /**
+         * Добавление нового состояния state_time
+         */
+        if (time == null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = new Date();
+            time = dateFormat.format(date);
+        }
+        cv.put("date", time);
+        cv.put("state_id", RowID);
+        id = db.insert("state_time", null, cv);
+        RowID = String.valueOf(id);
+        cv.clear();
+
+        /**
+         * Изменение старого состояния state_time, добавление конечной метки времени
+         */
+        cv.put("end_time", time);
+        db.update("state_time",cv,"id = ?",new String[] { currId });
+        cv.clear();
+        Log.d(LOG_TAG, currId);
+        currId = RowID;
+        Log.d(LOG_TAG, currId);
+
+        /**
+         * Добавление current_state
+         */
         cv.put("state_id",RowID);
         db.update("current_state",cv,null,null);
-        if (time == null) {
-            db.execSQL("INSERT INTO state_time(state_id, date) VALUES (?,datetime('now'))", new String[]{RowID});
-        } else {
-            db.execSQL("INSERT INTO state_time(state_id, date) VALUES (?,?)", new String[]{RowID,time});
-        }
+
+        /**
+         * Обновление 2 экрана
+         */
+        page2.ReloadList();
     }
 
     public void ClearDB() {

@@ -6,23 +6,29 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@android:id/text1"
+        android:id="@+id/text_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:gravity="center_vertical"
-        android:minHeight="?android:attr/listPreferredItemHeightSmall" />
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" />
 
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="left|center_horizontal|center"
+        android:paddingBottom="10dp"
+        android:paddingLeft="15dp">
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radioButton1"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:checked="false" />
 
         <RadioButton
             android:layout_width="wrap_content"

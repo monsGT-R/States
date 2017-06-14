@@ -28,7 +28,7 @@ public class Page3 extends Fragment {
         dbHelper = new DBHelper(getActivity());
         listItems = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_list_item_1, listItems);
+                R.layout.questions, R.id.text_question, listItems);
         mylist=(ListView) rootView.findViewById(R.id.lv_page_3);
         mylist.setAdapter(adapter);
         LoadList();

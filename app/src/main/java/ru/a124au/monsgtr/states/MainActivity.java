@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        page1 = new Page1();
         page2 = new Page2();
+        page1 = new Page1(page2);
         page3 = new Page3();
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), page1, page2, page3);
 

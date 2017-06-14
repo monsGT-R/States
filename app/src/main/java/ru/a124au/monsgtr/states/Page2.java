@@ -37,7 +37,7 @@ public class Page2 extends Fragment {
 
     // список атрибутов группы или элемента
     Map<String, String> m;
-
+    SimpleExpandableListAdapter adapter;
     ExpandableListView elvMain;
     DBHelper dbHelper;
 
@@ -46,6 +46,15 @@ public class Page2 extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_page_2, container, false);
         dbHelper = new DBHelper(getActivity());
+
+        //ReloadList();
+        elvMain = (ExpandableListView) rootView.findViewById(R.id.elvMain);
+        elvMain.setAdapter(adapter);
+
+        return rootView;
+    }
+
+    public void ReloadList() {
         LoadList();
 
         // список атрибутов групп для чтения
@@ -56,7 +65,7 @@ public class Page2 extends Fragment {
         String childFrom[] = new String[] {"childName"};
         // список ID view-элементов, в которые будет помещены атрибуты элементов
         int childTo[] = new int[] {android.R.id.text1};
-        SimpleExpandableListAdapter adapter = new SimpleExpandableListAdapter(
+        adapter = new SimpleExpandableListAdapter(
                 getContext(),
                 groupData,
                 android.R.layout.simple_expandable_list_item_1,
@@ -66,11 +75,7 @@ public class Page2 extends Fragment {
                 android.R.layout.simple_list_item_1,
                 childFrom,
                 childTo);
-
-        elvMain = (ExpandableListView) rootView.findViewById(R.id.elvMain);
         elvMain.setAdapter(adapter);
-
-        return rootView;
     }
 
     void LoadList() {
@@ -79,24 +84,24 @@ public class Page2 extends Fragment {
         // заполняем коллекцию групп из массива с названиями групп
         groupData = new ArrayList<Map<String, String>>();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String sqlQuery = "select distinct strftime('%d-%m-%Y',date) as date "
+        String sqlQuery = "select distinct strftime('%d-%m-%Y',date) as dateGrupe "
                 + "from state_time "
                 + "ORDER BY date DESC";
 
         Cursor c = db.rawQuery(sqlQuery, null);
 
         if (c.moveToFirst()) {
-            int date = c.getColumnIndex("date");
+            int date = c.getColumnIndex("dateGrupe");
             do {
-                // заполняем список атрибутов для каждой группы
+                // заполняем список атрибутов для каждой группы (дней)
                 m = new HashMap<String, String>();
-                m.put("groupName", c.getString(date)); // имя компании
+                m.put("groupName", c.getString(date)); // Дата
                 groupData.add(m);
 
 
                 // создаем коллекцию элементов
                 childDataItem = new ArrayList<Map<String, String>>();
-                sqlQuery = "select s.name as name, st.date as date "
+                sqlQuery = "select s.name as name, strftime('%H:%m',st.date) as start_time, strftime('%H:%m',st.end_time) as end_time "
                         + "from state_time as st "
                         + "inner join states as s "
                         + "on st.state_id = s.id "
@@ -105,11 +110,19 @@ public class Page2 extends Fragment {
 
                 Cursor el = db.rawQuery(sqlQuery, new String[]{c.getString(date)});
                 if (el.moveToFirst()) {
-                    int dateColIndex = el.getColumnIndex("date");
-                    int state_idColIndex = el.getColumnIndex("name");
+                    int     start_timeColumnIndex = el.getColumnIndex("start_time"),
+                            end_timeColumnIndex = el.getColumnIndex("end_time"),
+                            stateColumnIndex = el.getColumnIndex("name");
                     do {
+                        String  start_time = el.getString(start_timeColumnIndex),
+                                end_time = el.getString(end_timeColumnIndex),
+                                state = el.getString(stateColumnIndex),
+                                str = state+" с "+start_time;
+                        if (end_time != null) {
+                            str += " до "+end_time;
+                        }
                         m = new HashMap<String, String>();
-                        m.put("childName", el.getString(state_idColIndex)+" - "+el.getString(dateColIndex));
+                        m.put("childName", str);
                         childDataItem.add(m);
                     } while (el.moveToNext());
                     childData.add(childDataItem);

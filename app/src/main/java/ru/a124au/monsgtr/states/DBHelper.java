@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 5;
 
     final String LOG_TAG = "myLogs";
 
@@ -28,7 +28,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL("create table state_time ("
                 + "id integer primary key autoincrement,"
-                + "state_id integer, date datetime);");
+                + "state_id integer, date datetime, end_time datetime);");
 
 
         db.execSQL("create table current_state ("
@@ -44,6 +44,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO questions (id, name) VALUES (2, 'свое настроение');");
         db.execSQL("INSERT INTO questions (id, name) VALUES (3, 'свой голод');");
         db.execSQL("INSERT INTO questions (id, name) VALUES (4, 'свою cонливость');");
+        db.execSQL("INSERT INTO questions (id, name) VALUES (5, 'свою раздражительность');");
+        db.execSQL("INSERT INTO questions (id, name) VALUES (6, 'свое физическое самочувствие');");
     }
 
     @Override
@@ -92,6 +94,28 @@ public class DBHelper extends SQLiteOpenHelper {
                 db.execSQL("INSERT INTO questions (id, name) VALUES (3, 'свой голод');");
                 db.execSQL("INSERT INTO questions (id, name) VALUES (4, 'свою cонливость');");
 
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        }
+
+        if (oldVersion < 4) {
+            db.beginTransaction();
+            try {
+                db.execSQL("INSERT INTO questions (id, name) VALUES (5, 'свою раздражительность');");
+                db.execSQL("INSERT INTO questions (id, name) VALUES (6, 'свое физическое самочувствие');");
+
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        }
+
+        if (oldVersion < 5) {
+            db.beginTransaction();
+            try {
+                db.execSQL("ALTER TABLE state_time ADD end_time datetime;");
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
