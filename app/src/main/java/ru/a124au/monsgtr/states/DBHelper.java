@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 5;
+    private static final int DB_VERSION = 6;
 
     final String LOG_TAG = "myLogs";
 
@@ -46,6 +46,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO questions (id, name) VALUES (4, 'свою cонливость');");
         db.execSQL("INSERT INTO questions (id, name) VALUES (5, 'свою раздражительность');");
         db.execSQL("INSERT INTO questions (id, name) VALUES (6, 'свое физическое самочувствие');");
+
+
+        db.execSQL("create table answer_time ("
+                + "id integer primary key autoincrement,"
+                + "question_id integer, date datetime, answer integer);");
     }
 
     @Override
@@ -116,6 +121,18 @@ public class DBHelper extends SQLiteOpenHelper {
             db.beginTransaction();
             try {
                 db.execSQL("ALTER TABLE state_time ADD end_time datetime;");
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        }
+
+        if (oldVersion < 6) {
+            db.beginTransaction();
+            try {
+                db.execSQL("create table answer_time ("
+                        + "id integer primary key autoincrement,"
+                        + "question_id integer, date datetime, answer integer);");
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();

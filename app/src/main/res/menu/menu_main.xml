@@ -10,4 +10,8 @@
         android:orderInCategory="200"
         android:title="@string/insertDB" app:showAsAction="never"
         android:id="@+id/insertDB" />
+    <item
+        android:orderInCategory="200"
+        android:title="@string/insertDBAnswer" app:showAsAction="never"
+        android:id="@+id/insertDBAnswers" />
 </menu>

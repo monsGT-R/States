@@ -13,12 +13,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private Page1 page1;
     private Page2 page2;
     private Page3 page3;
+    private Page4 page4;
 
-    public SectionsPagerAdapter(FragmentManager fm, Page1 mpage1, Page2 mpage2, Page3 mpage3) {
+    public SectionsPagerAdapter(FragmentManager fm, Page1 page1, Page2 page2, Page3 page3, Page4 page4) {
         super(fm);
-        page1 = mpage1;
-        page2 = mpage2;
-        page3 = mpage3;
+        this.page1 = page1;
+        this.page2 = page2;
+        this.page3 = page3;
+        this.page4 = page4;
     }
 
     @Override
@@ -30,6 +32,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return page2;
             case 2:
                 return page3;
+            case 3:
+                return page4;
             default:
                 return null;
         }
@@ -37,8 +41,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
-        return 3;
+        // Show 4 total pages.
+        return 4;
     }
 
     @Override
@@ -50,6 +54,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return "Прошлые состояния";
             case 2:
                 return "Анкетирование";
+            case 3:
+                return "Журнал анкетирования";
         }
         return null;
     }

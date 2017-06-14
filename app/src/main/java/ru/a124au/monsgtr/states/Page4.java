@@ -7,9 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import android.widget.SimpleExpandableListAdapter;
 
 import java.util.ArrayList;
@@ -20,7 +18,7 @@ import java.util.Map;
  * Created by dima on 11/12/16.
  */
 
-public class Page2 extends Fragment {
+public class Page4 extends Fragment {
 
 
     View rootView;
@@ -85,7 +83,7 @@ public class Page2 extends Fragment {
         groupData = new ArrayList<Map<String, String>>();
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String sqlQuery = "select distinct strftime('%d-%m-%Y',date) as dateGrupe "
-                + "from state_time "
+                + "from answer_time "
                 + "ORDER BY date DESC";
 
         Cursor c = db.rawQuery(sqlQuery, null);
@@ -101,26 +99,23 @@ public class Page2 extends Fragment {
 
                 // создаем коллекцию элементов
                 childDataItem = new ArrayList<Map<String, String>>();
-                sqlQuery = "select s.name as name, strftime('%H:%m',st.date) as start_time, strftime('%H:%m',st.end_time) as end_time "
-                        + "from state_time as st "
-                        + "inner join states as s "
-                        + "on st.state_id = s.id "
+                sqlQuery = "select s.name as name, strftime('%H:%m',st.date) as start_time, st.answer as answer "
+                        + "from answer_time as st "
+                        + "inner join questions as s "
+                        + "on st.question_id = s.id "
                         + "where strftime('%d-%m-%Y',st.date) = ? "
-                        + "GROUP BY date ORDER BY date DESC";
+                        + "GROUP BY date ORDER BY st.id";
 
                 Cursor el = db.rawQuery(sqlQuery, new String[]{c.getString(date)});
                 if (el.moveToFirst()) {
                     int     start_timeColumnIndex = el.getColumnIndex("start_time"),
-                            end_timeColumnIndex = el.getColumnIndex("end_time"),
+                            answerColumnIndex = el.getColumnIndex("answer"),
                             stateColumnIndex = el.getColumnIndex("name");
                     do {
                         String  start_time = el.getString(start_timeColumnIndex),
-                                end_time = el.getString(end_timeColumnIndex),
+                                answer = el.getString(answerColumnIndex),
                                 state = el.getString(stateColumnIndex),
-                                str = state+" с "+start_time;
-                        if (end_time != null) {
-                            str += " до "+end_time;
-                        }
+                                str = "Я оценил "+state+" на "+answer+" из 5 в "+start_time;
                         m = new HashMap<String, String>();
                         m.put("childName", str);
                         childDataItem.add(m);

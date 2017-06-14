@@ -184,30 +184,28 @@ public class Page1 extends Fragment {
     }
 
     public void ClearDB() {
-
         titleText.setText("Вы отчистили базу данных");
-        listItems.clear();
-        adapter.notifyDataSetChanged();
         // подключаемся к БД
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         // удаляем все записи
         db.delete("states", null, null);
         db.delete("state_time", null, null);
+        db.delete("answer_time", null, null);
         // закрываем подключение к БД
         dbHelper.close();
     }
 
     public void InsertDB() {
         for (int i = 0; i < 9; i++) {
-            editState("Проснулся", -1, "2016-12-0"+(i+1)+" 07:33:2"+i);
-            editState("Завтракаю", -1, "2016-12-0"+(i+1)+" 08:02:1"+i);
-            editState("Работаю", -1, "2016-12-0"+(i+1)+" 09:00:1"+i);
-            editState("Обедаю", -1, "2016-12-0"+(i+1)+" 13:30:1"+i);
-            editState("Продолжаю работать", -1, "2016-12-0"+(i+1)+" 14:20:1"+i);
-            editState("Возвращаюсь домой", -1, "2016-12-0"+(i+1)+" 18:10:1"+i);
-            editState("Ужинаю", -1, "2016-12-0"+(i+1)+" 18:40:1"+i);
-            editState("Гуляю", -1, "2016-12-0"+(i+1)+" 20:03:1"+i);
-            editState("Ложусь спать", -1, "2016-12-0"+(i+1)+" 23:00:1"+i);
+            editState("Проснулся", -1, "2017-06-0"+(i+1)+" 07:33:2"+i);
+            editState("Завтракаю", -1, "2017-06-0"+(i+1)+" 08:02:1"+i);
+            editState("Работаю", -1, "2017-06-0"+(i+1)+" 09:00:1"+i);
+            editState("Обедаю", -1, "2017-06-0"+(i+1)+" 13:30:1"+i);
+            editState("Продолжаю работать", -1, "2017-06-0"+(i+1)+" 14:20:1"+i);
+            editState("Возвращаюсь домой", -1, "2017-06-0"+(i+1)+" 18:10:1"+i);
+            editState("Ужинаю", -1, "2017-06-0"+(i+1)+" 18:40:1"+i);
+            editState("Гуляю", -1, "2017-06-0"+(i+1)+" 20:03:1"+i);
+            editState("Ложусь спать", -1, "2017-06-0"+(i+1)+" 23:00:1"+i);
         }
     }
 

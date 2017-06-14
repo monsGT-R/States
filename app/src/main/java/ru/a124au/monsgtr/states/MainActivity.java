@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Page1 page1;
     private Page2 page2;
     private Page3 page3;
+    private Page4 page4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
         page2 = new Page2();
         page1 = new Page1(page2);
-        page3 = new Page3();
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), page1, page2, page3);
+        page4 = new Page4();
+        page3 = new Page3(page4);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), page1, page2, page3, page4);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -78,6 +80,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.insertDB) {
             page1.InsertDB();
+            return true;
+        }
+
+        if (id == R.id.insertDBAnswers) {
+            page3.InsertDB();
             return true;
         }
 
