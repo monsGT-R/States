@@ -39,8 +39,6 @@ public class Page3 extends Fragment {
     final String ATTRIBUTE_NAME_TEXT = "text";
     final String ATTRIBUTE_NAME_RB = "rb";
 
-    RadioGroup radioGroup;
-    RadioButton[] rb = new RadioButton[5];
     ArrayList<Map<String, Object>> data;
 
     public Page3(Page4 page4) {
@@ -90,6 +88,12 @@ public class Page3 extends Fragment {
     }
 
     void LoadList() {
+        /* String sqlQuery = "select q.name as name, at.answer as answer "
+                + "from questions as q "
+                + "left join answer_time as at "
+                + "on at.question_id = q.id " +
+                "where strftime('%d-%m-%Y',at.date) = ? "
+                + "GROUP BY at.date ORDER BY at.id";*/
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String sqlQuery = "select name "
                 + "from questions";
@@ -102,8 +106,9 @@ public class Page3 extends Fragment {
 
                 m = new HashMap<String, Object>();
                 m.put(ATTRIBUTE_NAME_TEXT, "Оцените "+c.getString(state_idColIndex));
-                m.put(ATTRIBUTE_NAME_RB, rnd.nextInt(5));
+                m.put(ATTRIBUTE_NAME_RB, rnd.nextInt(5)+1);
                 data.add(m);
+
             } while (c.moveToNext());
         }
         adapter.notifyDataSetChanged();
@@ -116,7 +121,7 @@ public class Page3 extends Fragment {
         String RowID;
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         if (id != -1) {
-            stateText = listItems.get((int) id);
+            stateText = data.get((int)id).get(ATTRIBUTE_NAME_TEXT).toString();
         }
         stateText = stateText.replaceAll("Оцените ", "");
         Cursor c = db.query("questions", null, "upper(name) = upper(?)", new String[] { stateText }, null, null, null);
@@ -175,17 +180,10 @@ public class Page3 extends Fragment {
         @Override
         public boolean setViewValue(View view, Object data,
                                     String textRepresentation) {
-            int i = 0;
-            rb[0] = (RadioButton) view.findViewById(R.id.radioButton1);
-            rb[1] = (RadioButton) view.findViewById(R.id.radioButton2);
-            rb[2] = (RadioButton) view.findViewById(R.id.radioButton3);
-            rb[3] = (RadioButton) view.findViewById(R.id.radioButton4);
-            rb[4] = (RadioButton) view.findViewById(R.id.radioButton5);
             switch (view.getId()) {
-                // LinearLayout
                 case R.id.radioButtons:
-                    i = ((Integer) data).intValue();
-                    rb[i].setChecked(true);
+                    RadioButton rb = (RadioButton) view.findViewWithTag("rb"+data);
+                    rb.setChecked(true);
                     return true;
             }
             return false;

@@ -29,31 +29,36 @@
             android:layout_height="wrap_content"
             android:id="@+id/radioButton1"
             android:layout_weight="1"
-            android:checked="false" />
+            android:checked="false"
+            android:tag="rb1" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radioButton2"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:tag="rb2" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radioButton3"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:tag="rb3" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radioButton4"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:tag="rb4"/>
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/radioButton5"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:tag="rb5" />
     </RadioGroup>
 
 </LinearLayout>

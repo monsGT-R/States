@@ -115,7 +115,7 @@ public class Page4 extends Fragment {
                         String  start_time = el.getString(start_timeColumnIndex),
                                 answer = el.getString(answerColumnIndex),
                                 state = el.getString(stateColumnIndex),
-                                str = "Я оценил "+state+" на "+answer+" из 5 в "+start_time;
+                                str = "Я оценил "+state+" на "+answer+" из 5"; //+" в "+start_time;
                         m = new HashMap<String, String>();
                         m.put("childName", str);
                         childDataItem.add(m);
